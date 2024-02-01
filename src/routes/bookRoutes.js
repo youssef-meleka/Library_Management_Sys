@@ -8,7 +8,7 @@ const bookController = require('../controllers/bookController');
 
 bookRouter.get('/books', bookController.get_all_books);
 bookRouter.post('/add-book', bookController.create_book);
-bookRouter.get('/show-book/:id', bookController.get_book_by_id);
+bookRouter.get('/search-book/:searchTerm', bookController.search_for_book);
 bookRouter.put('/book/:id', bookController.update_book);
 bookRouter.delete('/book/:id', bookController.delete_book);
 

@@ -20,28 +20,53 @@ const create_book = async (req, res) => {
     }
 };
 
-const get_book_by_id = async (req, res) => {
+const search_for_book = async (req, res) => {
+
     try {
-        const id = req.params.id
-        const book = await bookServices.get_book_by_id(id);
-        if (book) {
-            res.status(200).json({status: 'Success', message: 'Retrieve book successfully', data: book});
-        } else {
-            res.status(500).json({status: 'Failure', message: 'Please enter valid id'});
-        }
+        const { searchTerm } = req.query;
+        const books = await bookServices.search_for_book(searchTerm);
+        res.status(200).json({ status: 'Success', message: 'Books found', data: books });
+
     } catch (error) {
-        res.status(500).json({status: 'Failure', message: 'Faild to get this treatment', data: error});
+        res.status(500).json({ status: 'Failure', message: 'Error searching books' });
     }
 };
 
-const update_book = async (req, res) => {};
+const update_book = async (req, res) => {
 
-const delete_book = async (req, res) => {};
+    try {
+        const id = req.params.id
+        const { title, author, isbn, availableQuantity, shelfLocation } = req.body;
+    
+        const updatedBook = await bookServices.update_book(id, title, author, isbn, availableQuantity, shelfLocation);
+    
+        res.status(200).json({ status: 'Success',message: 'Book updated successfully', data: updatedBook });
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({status: 'Failure', message: 'Error updating book', data: error });
+    }
+
+};
+
+const delete_book = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+    
+        await bookServices.delete_book(id);
+        res.status(200).json({ status: 'Success', message: 'Book deleted successfully' });
+
+    } catch (error) {
+        res.status(500).json({ status: 'Failure',message: 'Error deleting book' });
+    }
+
+};
 
 module.exports = {
     get_all_books,
     create_book,
-    get_book_by_id,
+    search_for_book,
     update_book,
     delete_book
 };
